@@ -1,4 +1,4 @@
-package com.jpm.coding.problem.Test;
+package com.jpmc.coding.assignment.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -83,7 +83,7 @@ public class DailyTradingTest {
     }
 
     @Test
-    public void TestFilterInstructionsbySettlementDateAndTradeType() {
+    public void testFilterInstructionsbySettlementDateAndTradeType() {
 	List<TradeDetails> tradeDetails = instructionManager.settleInstructions(tradingInstrunctions);
 	List<TradeDetails> fillteredTradesForBuy = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(
 		tradeDetails, LocalDate.parse("2018-08-06"), TradeType.BUY);
@@ -94,7 +94,7 @@ public class DailyTradingTest {
     }
 
     @Test
-    public void TestGenerateDailyTradeReport() {
+    public void testGenerateDailyTradeReport() {
 	List<TradeDetails> tradeDetails = instructionManager.settleInstructions(tradingInstrunctions);
 	List<TradeDetails> fillteredTradesForBuy = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(
 		tradeDetails, LocalDate.parse("2018-08-06"), TradeType.BUY);
