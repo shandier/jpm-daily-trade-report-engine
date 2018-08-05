@@ -14,7 +14,7 @@ import com.jpmc.coding.assignment.model.TradeDetails;
 import com.jpmc.coding.assignment.model.TradeInstruction;
 import com.jpmc.coding.assignment.model.TradeType;
 import com.jpmc.coding.assignment.services.InstructionManager;
-import com.jpmc.coding.assignment.services.impl.InstructionManagerImpl;
+import com.jpmc.coding.assignment.services.servicesImpl.InstructionManagerImpl;
 import com.jpmc.coding.assignment.util.InstructionUtil;
 import com.jpmc.coding.assignment.util.TradeUtil;
 

@@ -1,4 +1,4 @@
-package com.jpmc.coding.assignment.services.impl;
+package com.jpmc.coding.assignment.dataReader.readerImpl;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.jpmc.coding.assignment.dataReader.TradeInstructionReader;
 import com.jpmc.coding.assignment.model.TradeInstruction;
 import com.jpmc.coding.assignment.model.TradeType;
-import com.jpmc.coding.assignment.services.TradeInstructionReader;
 
 /**
  * @FileInstructionReader is a strategy implementation

@@ -5,11 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import com.jpmc.coding.assignment.dataReader.readerImpl.FileInstructionReader;
 import com.jpmc.coding.assignment.model.TradeInstruction;
 import com.jpmc.coding.assignment.model.TradeType;
 import com.jpmc.coding.assignment.services.ReportManager;
-import com.jpmc.coding.assignment.services.impl.FileInstructionReader;
-import com.jpmc.coding.assignment.services.impl.ReportManagerImpl;
+import com.jpmc.coding.assignment.services.servicesImpl.ReportManagerImpl;
 
 public class Main {
     public static void main(String[] args) {
