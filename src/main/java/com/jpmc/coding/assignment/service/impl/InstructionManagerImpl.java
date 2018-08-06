@@ -16,7 +16,7 @@ public class InstructionManagerImpl implements InstructionManager {
     public List<TradeDetails> processInstructions(List<TradeInstruction> tradeInstructions) {
 	List<TradeDetails> tradeDetailsList = new ArrayList<TradeDetails>();
 	if (tradeInstructions == null || tradeInstructions.isEmpty()) {
-	    throw new IllegalArgumentException("No trade instructions found for processing");
+	    throw new IllegalArgumentException("ERROR: No trade instructions found for processing");
 	}
 	tradeInstructions.forEach(instruction -> {
 	    if (instruction != null) {

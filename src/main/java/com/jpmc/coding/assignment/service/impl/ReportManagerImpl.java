@@ -26,7 +26,8 @@ public class ReportManagerImpl implements ReportManager {
 		Double::sum);
 	String reportFor = TradeType.BUY.equals(tradeType) ? InstructionUtil.OUTGOING : InstructionUtil.INCOMING;
 	// report text to display
-	System.out.println(String.format("Total %s on %s is %f ", reportFor, settlemetDate.toString(), totalTrade));
+	System.out.println(
+		String.format("TRADE REPORT: Total %s on %s is %f ", reportFor, settlemetDate.toString(), totalTrade));
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ReportManagerImpl implements ReportManager {
 	String reportFor = TradeType.BUY.equals(tradeType) ? InstructionUtil.OUTGOING : InstructionUtil.INCOMING;
 	// sort in descending order
 	tradeDetails.sort((trade1, trade2) -> trade2.getTradeUSD().compareTo(trade1.getTradeUSD()));
-	System.out.println("Top entites for " + reportFor + "\n");
+	System.out.println("DASHBOARD: Top entites for " + reportFor);
 	tradeDetails.forEach((tradeDetail) -> {
 	    System.out.println(String.format("Entity %s with total %s is %f ", tradeDetail.getEntity(), reportFor,
 		    tradeDetail.getTradeUSD()));
@@ -49,7 +50,7 @@ public class ReportManagerImpl implements ReportManager {
     private List<TradeDetails> getFilteredTradeDetails(List<TradeInstruction> instructions, TradeType tradeType,
 	    LocalDate settlemetDate) {
 	if (instructions == null || instructions.isEmpty()) {
-	    throw new IllegalArgumentException("No trade instructions found to generate report");
+	    throw new IllegalArgumentException("ERROR: No trade instructions found to generate report");
 	}
 	List<TradeDetails> tradeDetails = instructionManager.processInstructions(instructions);
 	return InstructionUtil.filterInstructionsbySettlementDateAndTradeType(tradeDetails, settlemetDate, tradeType);

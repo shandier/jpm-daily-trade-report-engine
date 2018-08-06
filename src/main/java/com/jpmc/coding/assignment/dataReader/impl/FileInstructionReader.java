@@ -41,7 +41,7 @@ public class FileInstructionReader implements TradeInstructionReader {
 		fetchInstuctions(instructionslist, line, ++linenumber);
 	    }
 	} catch (IOException e) {
-	    throw new IOException("Unable to read souce file at " + FilePath);
+	    throw new IOException("ERROR: Unable to read souce file at " + FilePath);
 	}
 	return instructionslist;
     }
@@ -56,8 +56,9 @@ public class FileInstructionReader implements TradeInstructionReader {
 		TradeInstruction instruction = parseInstructions(insrunctionData);
 		instructionslist.add(instruction);
 	    } catch (IllegalArgumentException | DateTimeParseException e) {
-		System.out.println(String.format("Unable to parse data, Skipping invalid record at line number %d, %s",
-			linenumber, e.getMessage()));
+		System.out.println(
+			String.format("INFO: Unable to parse data, Skipping invalid record at line number %d, %s",
+				linenumber, e.getMessage()));
 	    }
 	}
     }
@@ -85,16 +86,16 @@ public class FileInstructionReader implements TradeInstructionReader {
      */
     private boolean ValidateRecord(String[] instructionData, int linenumber) {
 	if (instructionData.length < 8) {
-	    System.out.println(String.format("Missing column at line %d, Skipping the record", linenumber));
+	    System.out.println(String.format("INFO: Missing column at line %d, Skipping the record", linenumber));
 	    return false;
 	}
 	if (Arrays.asList(instructionData).contains("")) {
-	    System.out.println(String.format("Blank column found at line %d, Skipping the record", linenumber));
+	    System.out.println(String.format("INFO: Blank column found at line %d, Skipping the record", linenumber));
 	    return false;
 	}
 	if (!(instructionData[1].equalsIgnoreCase("b") || instructionData[1].equalsIgnoreCase("s"))) {
 	    System.out.println(
-		    String.format("Trade type value should be B or S, Skipping record at line %d" + linenumber));
+		    String.format("INFO: Trade type value should be B or S, Skipping record at line %d" + linenumber));
 	    return false;
 	}
 	return true;

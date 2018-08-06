@@ -22,7 +22,7 @@ public class Main {
 	try {
 	    if (args.length < 1 || args.length > 3) {
 		throw new IllegalArgumentException(
-			"Invalid arguments provided. Valid arguments are Filepath, TradeType, reportingDate");
+			"ERROR: Invalid arguments provided. Valid arguments are Filepath, TradeType, reportingDate");
 	    }
 	    source = args[0];
 	    if (args[1].equalsIgnoreCase("b")) {
@@ -31,7 +31,7 @@ public class Main {
 		tradeType = TradeType.SELL;
 	    } else {
 		throw new IllegalArgumentException(
-			"Invalid Value for TradeType. TradeType values should be 'b' or'B' for Buy and  's' or 'S' for Sell");
+			"ERROR: Invalid Value for TradeType. TradeType values should be 'b' or'B' for Buy and  's' or 'S' for Sell");
 	    }
 	    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	    date = LocalDate.parse(args[2], dtf);
