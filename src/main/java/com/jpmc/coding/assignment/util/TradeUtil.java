@@ -38,17 +38,14 @@ public class TradeUtil {
      *         otherwise.
      */
     public static LocalDate getWorkingSettlementDate(Currency currency, LocalDate localDate) {
-	if (currency == null || localDate == null) {
-	    System.out.println("Invalid arguments");
-	    return LocalDate.now();
+	if (currency == null) {
+	    throw new IllegalArgumentException("Invalid arguments currency " + currency);
 	}
-	try {
-	    if (isWeekend(currency, localDate.getDayOfWeek())) {
-		localDate = getWorkingSettlementDate(currency, localDate.plusDays(1));
-	    }
-	} catch (IllegalArgumentException e) {
-	    System.out.println("Invalid arguments");
-	    return LocalDate.now();
+	if (localDate == null) {
+	    throw new IllegalArgumentException("Invalid arguments localDate " + localDate);
+	}
+	if (isWeekend(currency, localDate.getDayOfWeek())) {
+	    localDate = getWorkingSettlementDate(currency, localDate.plusDays(1));
 	}
 	return localDate;
     }

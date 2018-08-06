@@ -13,8 +13,8 @@ import org.junit.Test;
 import com.jpmc.coding.assignment.model.TradeDetails;
 import com.jpmc.coding.assignment.model.TradeInstruction;
 import com.jpmc.coding.assignment.model.TradeType;
-import com.jpmc.coding.assignment.services.InstructionManager;
-import com.jpmc.coding.assignment.services.servicesImpl.InstructionManagerImpl;
+import com.jpmc.coding.assignment.service.InstructionManager;
+import com.jpmc.coding.assignment.service.impl.InstructionManagerImpl;
 import com.jpmc.coding.assignment.util.InstructionUtil;
 import com.jpmc.coding.assignment.util.TradeUtil;
 
@@ -25,32 +25,22 @@ public class DailyTradingTest {
     @Before
     public void buildTestData() {
 
-	TradeInstruction inst1 = buildTradeInstruction("foo", "b", "0.50", "SGD", "2018-08-01", "2018-08-04", "200",
-		"100.25");
-
-	TradeInstruction inst2 = buildTradeInstruction("bar", "s", "0.22", "AED", "2018-02-02", "2018-08-03", "450",
-		"150.5");
-
-	TradeInstruction inst3 = buildTradeInstruction("foo", "s", "0.30", "INR", "2018-08-01", "2018-08-04", "100",
-		"130.25");
-
-	TradeInstruction inst4 = buildTradeInstruction("bar", "b", "0.42", "INR", "2016-01-05", "2018-01-07", "400",
-		"135.5");
-
-	TradeInstruction inst5 = buildTradeInstruction("foo", "b", "0.20", "SGD", "2016-01-01", "2018-08-04", "140",
-		"112.25");
-	tradingInstrunctions.add(inst1);
-	tradingInstrunctions.add(inst2);
-	tradingInstrunctions.add(inst3);
-	tradingInstrunctions.add(inst4);
-	tradingInstrunctions.add(inst5);
-
+	tradingInstrunctions
+		.add(buildTradeInstruction("foo", "b", "0.50", "SGD", "2018-08-01", "2018-08-04", "200", "100.25"));
+	tradingInstrunctions
+		.add(buildTradeInstruction("bar", "s", "0.22", "AED", "2018-02-02", "2018-08-03", "450", "150.5"));
+	tradingInstrunctions
+		.add(buildTradeInstruction("foo", "s", "0.30", "INR", "2018-08-01", "2018-08-04", "100", "130.25"));
+	tradingInstrunctions
+		.add(buildTradeInstruction("bar", "b", "0.42", "INR", "2016-01-05", "2018-01-07", "400", "135.5"));
+	tradingInstrunctions
+		.add(buildTradeInstruction("foo", "b", "0.20", "SGD", "2016-01-01", "2018-08-04", "140", "112.25"));
     }
 
-    @Test
-    public void testsettleInstructionsWithNullAndEmptyList() {
-	assertEquals(true, instructionManager.settleInstructions(null).isEmpty());
-	assertEquals(true, instructionManager.settleInstructions(new ArrayList<TradeInstruction>()).isEmpty());
+    @Test(expected = IllegalArgumentException.class)
+    public void testSettleInstructionsWithNullAndEmptyList() {
+	instructionManager.processInstructions(null);
+	instructionManager.processInstructions(new ArrayList<TradeInstruction>());
     }
 
     @Test
@@ -84,7 +74,7 @@ public class DailyTradingTest {
 
     @Test
     public void testFilterInstructionsbySettlementDateAndTradeType() {
-	List<TradeDetails> tradeDetails = instructionManager.settleInstructions(tradingInstrunctions);
+	List<TradeDetails> tradeDetails = instructionManager.processInstructions(tradingInstrunctions);
 	List<TradeDetails> fillteredTradesForBuy = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(
 		tradeDetails, LocalDate.parse("2018-08-06"), TradeType.BUY);
 	List<TradeDetails> fillteredtradesForSell = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(
@@ -95,7 +85,7 @@ public class DailyTradingTest {
 
     @Test
     public void testGenerateDailyTradeReport() {
-	List<TradeDetails> tradeDetails = instructionManager.settleInstructions(tradingInstrunctions);
+	List<TradeDetails> tradeDetails = instructionManager.processInstructions(tradingInstrunctions);
 	List<TradeDetails> fillteredTradesForBuy = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(
 		tradeDetails, LocalDate.parse("2018-08-06"), TradeType.BUY);
 	List<TradeDetails> fillteredtradesForSell = InstructionUtil.filterInstructionsbySettlementDateAndTradeType(

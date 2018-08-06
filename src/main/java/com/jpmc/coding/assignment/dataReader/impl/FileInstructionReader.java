@@ -1,4 +1,4 @@
-package com.jpmc.coding.assignment.dataReader.readerImpl;
+package com.jpmc.coding.assignment.dataReader.impl;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,81 +18,60 @@ import com.jpmc.coding.assignment.model.TradeInstruction;
 import com.jpmc.coding.assignment.model.TradeType;
 
 /**
- * @FileInstructionReader is a strategy implementation
- *                        of @TradeInstructionReader which read data from a CSV
- *                        file source and parse it into trade instruction to
- *                        work on.
- * @FileInstructionReader constructor takes string source file as input to read
- *                        data from file. In future extension , it can be
- *                        extended to read other file formats also.
- *
+ * FileInstructionReader is a strategy implementation of TradeInstructionReader
+ * which read data from a CSV file source and parse it into trade instructions.
  */
 public class FileInstructionReader implements TradeInstructionReader {
     private final String FilePath;
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
     public FileInstructionReader(String filePath) {
-	super();
 	FilePath = filePath;
     }
 
     @Override
-    public List<TradeInstruction> getTradeInstruction() {
+    public List<TradeInstruction> getTradeInstruction() throws IOException {
 	List<TradeInstruction> instructionslist = new ArrayList<>();
 	try (Stream<String> stream = Files.lines(Paths.get(FilePath))) {
-	    AtomicInteger linenumber = new AtomicInteger(1);
 	    // filter blank lines
 	    List<String> validLines = stream.skip(1).filter(line -> !line.equals("")).collect(Collectors.toList());
-	    // read instructions line by line to fetch instructions
-	    validLines.forEach(line -> {
-		linenumber.getAndIncrement();
-		fetchInstuction(instructionslist, line, linenumber);
-	    });
-	} catch (IOException e1) {
-	    System.out.println("Unable to read souce file at" + FilePath);
+	    int linenumber = 1;
+	    // parse instructions
+	    for (String line : validLines) {
+		fetchInstuctions(instructionslist, line, ++linenumber);
+	    }
+	} catch (IOException e) {
+	    throw new IOException("Unable to read souce file at " + FilePath);
 	}
 	return instructionslist;
-
     }
 
     /**
      * validate and read data from line and add valid instruction into the list
-     * 
-     * @param instructionslist
-     *            reference to list of instructions
-     * @param line
-     *            line from file to parse
-     * @param linenumber
-     *            line number to track
      */
-    private void fetchInstuction(List<TradeInstruction> instructionslist, String line, AtomicInteger linenumber) {
+    private void fetchInstuctions(List<TradeInstruction> instructionslist, String line, int linenumber) {
 	String[] insrunctionData = line.split(",");
 	if (ValidateRecord(insrunctionData, linenumber)) {
 	    try {
 		TradeInstruction instruction = parseInstructions(insrunctionData);
 		instructionslist.add(instruction);
 	    } catch (IllegalArgumentException | DateTimeParseException e) {
-		System.out.println("Unable to parse, Skipping invalid record at line number " + linenumber);
+		System.out.println(String.format("Unable to parse data, Skipping invalid record at line number %d, %s",
+			linenumber, e.getMessage()));
 	    }
 	}
     }
 
     /**
      * Parse data into Instruction and build and instruction object
-     * 
-     * @param instructionData
-     *            array of instruction fields values
-     * @return @TradeInstruction
-     * @throws IllegalArgumentException
-     * @throws DateTimeParseException
      */
     private TradeInstruction parseInstructions(String[] instructionData)
 	    throws IllegalArgumentException, DateTimeParseException {
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
 	return new TradeInstruction.InstructionBuilder().setTraderEntity(instructionData[0])
 		.setTradeType(instructionData[1].equalsIgnoreCase("b") ? TradeType.BUY : TradeType.SELL)
 		.setAgreedFX(Float.valueOf(instructionData[2])).setCurrency(Currency.getInstance(instructionData[3]))
-		.setInstructionDate(LocalDate.parse(instructionData[4], dtf))
-		.setSettlementDate(LocalDate.parse(instructionData[5], dtf))
+		.setInstructionDate(LocalDate.parse(instructionData[4], DTF))
+		.setSettlementDate(LocalDate.parse(instructionData[5], DTF))
 		.setTradeUnits(Integer.valueOf(instructionData[6])).setPricePerUnit(Double.valueOf(instructionData[7]))
 		.buildInstructions();
     }
@@ -105,14 +83,18 @@ public class FileInstructionReader implements TradeInstructionReader {
      * @param linenumber
      * @return
      */
-    private boolean ValidateRecord(String[] instructionData, AtomicInteger linenumber) {
-	if (instructionData.length < 8 || Arrays.asList(instructionData).contains("")) {
-	    System.out.println("Skipping invalid record at line number " + linenumber);
+    private boolean ValidateRecord(String[] instructionData, int linenumber) {
+	if (instructionData.length < 8) {
+	    System.out.println(String.format("Missing column at line %d, Skipping the record", linenumber));
+	    return false;
+	}
+	if (Arrays.asList(instructionData).contains("")) {
+	    System.out.println(String.format("Blank column found at line %d, Skipping the record", linenumber));
 	    return false;
 	}
 	if (!(instructionData[1].equalsIgnoreCase("b") || instructionData[1].equalsIgnoreCase("s"))) {
-	    System.out
-		    .println("Trade type value should be B or S, Skipping invalid record at line number " + linenumber);
+	    System.out.println(
+		    String.format("Trade type value should be B or S, Skipping record at line %d" + linenumber));
 	    return false;
 	}
 	return true;

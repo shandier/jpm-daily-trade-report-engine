@@ -18,11 +18,6 @@ public class InstructionUtil {
 
     /**
      * filter instructions based on trade type and date
-     * 
-     * @param tradeDetails
-     * @param settlemetDate
-     * @param tradeType
-     * @return
      */
     public static List<TradeDetails> filterInstructionsbySettlementDateAndTradeType(List<TradeDetails> tradeDetails,
 	    LocalDate settlemetDate, TradeType tradeType) {
