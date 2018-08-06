@@ -14,7 +14,7 @@ This reporting engine has 4 modules
 
 **Note**: Sample CSV is uploaded in resources folder.
 
-# How to execute Jar:
+# How to execute Jar(dailyTradeReportEngine.jar):
 1. Downlod the jar and sample CSV file from resources folder.
 2. Open the cmd or shell and go to path where downloaded jar is places.
 3. Use command **java -jar <jarname> [parameterlist]** to execute jar.
